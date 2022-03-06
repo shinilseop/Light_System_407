@@ -1,0 +1,112 @@
+import time
+from datetime import datetime
+
+import pandas as pd
+
+import Shin_Package.open_processor_0_2.datas as datas
+
+
+def illum_thread(illum_add):
+    time.sleep(10)
+    # change_value = [0.151515, 0.30303, 0.151515]
+    # while True:
+    #     print('CHANGE ILLUM')
+    #     # 오전에서 오후로 이동
+    #     illum_add[0] += change_value[0]
+    #     illum_add[2] -= change_value[0]
+    #
+    #     illum_add[3] += change_value[1]
+    #     illum_add[5] -= change_value[1]
+    #
+    #     illum_add[6] += change_value[2]
+    #     illum_add[8] -= change_value[2]
+    #
+    #     time.sleep(60)
+
+    change_time = 10
+    illum_change_value = 9.5
+    datas.satisfy_flag[0] = False
+
+    for i in range(change_time):
+        # 밤에서 일출에서 오전으로
+
+        illum_add[0] += illum_change_value
+        illum_add[1] += illum_change_value * 2
+        illum_add[2] += illum_change_value * 2
+        illum_add[4] += illum_change_value
+        illum_add[5] += illum_change_value * 2
+        illum_add[8] += illum_change_value
+        datas.illum_change_time.append(datetime.now())
+        print('CHANGE ILLUM 1[%s] %s' % (i, datas.illum_change_time[len(datas.illum_change_time) - 1]))
+        time.sleep(60)
+
+        if datas.satisfy_flag[0]:
+            datas.satisfy_flag[0] = False
+        else:
+            datas.illum_satisfy_time.append('-')
+        pd.DataFrame([datas.illum_change_time, datas.illum_satisfy_time], index=['change', 'satisfy']).to_csv(
+            "%s\\%s\\[_만족시간1]_%s.csv" % (
+                datas.path, datas.save_folder, i))
+
+        datas.satisfy_flag[0] = False
+
+    print("CHANGE  TIME : %s"%datas.illum_change_time)
+    print("SATISFY TIME : %s"%datas.illum_satisfy_time)
+
+    for i in range(change_time):
+        # 오전에서 오후로
+
+        illum_add[0] += illum_change_value
+        illum_add[2] -= illum_change_value
+        illum_add[3] += illum_change_value * 2
+        illum_add[5] -= illum_change_value * 2
+        illum_add[6] += illum_change_value
+        illum_add[8] -= illum_change_value
+        datas.illum_change_time.append(datetime.now())
+        print('CHANGE ILLUM 2[%s] %s' % (i, datas.illum_change_time[len(datas.illum_change_time) - 1]))
+        time.sleep(60)
+
+        if datas.satisfy_flag[0]:
+            datas.satisfy_flag[0] = False
+        else:
+            datas.illum_satisfy_time.append('-')
+        pd.DataFrame([datas.illum_change_time, datas.illum_satisfy_time], index=['change', 'satisfy']).to_csv(
+            "%s\\%s\\[_만족시간2]_%s.csv" % (
+                datas.path, datas.save_folder, i))
+
+        datas.satisfy_flag[0] = False
+
+    print("CHANGE  TIME : %s"%datas.illum_change_time)
+    print("SATISFY TIME : %s"%datas.illum_satisfy_time)
+
+    for i in range(change_time):
+        # 오후에서 밤으로
+
+        illum_add[0] -= illum_change_value * 2
+        illum_add[1] -= illum_change_value * 2
+        illum_add[2] -= illum_change_value
+        illum_add[3] -= illum_change_value * 2
+        illum_add[4] -= illum_change_value
+        illum_add[6] -= illum_change_value
+        datas.illum_change_time.append(datetime.now())
+        print('CHANGE ILLUM 3[%s] %s' % (i, datas.illum_change_time[len(datas.illum_change_time) - 1]))
+        time.sleep(60)
+
+        if datas.satisfy_flag[0]:
+            datas.satisfy_flag[0] = False
+        else:
+            datas.illum_satisfy_time.append('-')
+        pd.DataFrame([datas.illum_change_time, datas.illum_satisfy_time], index=['change', 'satisfy']).to_csv(
+            "%s\\%s\\[_만족시간3]_%s.csv" % (
+                datas.path, datas.save_folder, i))
+
+        datas.satisfy_flag[0] = False
+
+    pd.DataFrame([datas.illum_change_time, datas.illum_satisfy_time], index=['change', 'satisfy']).to_csv(
+        "%s\\%s\\[_만족시간 완료].csv" % (
+            datas.path, datas.save_folder))
+
+    print("CHANGE  TIME : %s"%datas.illum_change_time)
+    print("SATISFY TIME : %s"%datas.illum_satisfy_time)
+
+    datas.isFinish=False
